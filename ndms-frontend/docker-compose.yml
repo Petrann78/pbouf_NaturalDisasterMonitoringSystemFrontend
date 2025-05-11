@@ -1,0 +1,14 @@
+services:
+  ndms-frontend:
+    container_name: ndms-frontend
+    build:
+      context: .
+      args:
+        - BUILD_ENVIRONMENT=dev
+    ports:
+      - "3000:3000"
+    networks:
+      - ndms-net
+
+networks:
+  ndms-net:

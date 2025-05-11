@@ -6,6 +6,7 @@ function DisasterList() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
+    setData([]);
     const fetchUrl = `${import.meta.env.VITE_API_URL}/api/v1/ndms/${disasterType}s/all`;
     axios.get(fetchUrl)
       .then((response) => {
@@ -87,16 +88,16 @@ function DisasterList() {
               <td>{new Date(item.timestamp).toLocaleString()}</td>
               <td>{item.richter_magnitude}</td>
               <td>{item.moment_magnitude}</td>
-              <td>{item.energy_release.toExponential()} J</td>
+              <td>{item.energy_release} J</td>
               <td>{item.intensity}</td>
-              <td>{item.epicenter.latitude}</td>
-              <td>{item.epicenter.longitude}</td>
+              <td>{item.epicenter?.latitude ?? 'N/A'}</td>
+              <td>{item.epicenter?.longitude ?? 'N/A'}</td>
               <td>{item.depth_km}</td>
               <td>{item.damage_level}</td>
               <td>{item.soil_type}</td>
-              <td>{item.infra_damage.roads}</td>
-              <td>{item.infra_damage.bridges}</td>
-              <td>{item.infra_damage.buildings}</td>
+              <td>{item.infra_damage?.roads ?? 'N/A'}</td>
+              <td>{item.infra_damage?.bridges ?? 'N/A'}</td>
+              <td>{item.infra_damage?.buildings ?? 'N/A'}</td>
             </tr>
           );
         case 'flood':

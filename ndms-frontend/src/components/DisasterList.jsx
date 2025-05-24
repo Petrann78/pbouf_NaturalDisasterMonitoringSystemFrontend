@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import earthquakeImage from '../assets/earthquake.jpg';
+import floodImage from '../assets/flood.jpg';
+import firestormImage from '../assets/firestorm.jpg';
 
 function DisasterList() {
   const [disasterType, setDisasterType] = useState('earthquake');
@@ -23,6 +26,19 @@ function DisasterList() {
         setData([]);
       });
   }, [disasterType]);
+
+  const getDisasterImage = () => {
+    switch (disasterType) {
+      case 'earthquake':
+        return earthquakeImage;
+      case 'flood':
+        return floodImage;
+      case 'firestorm':
+        return firestormImage;
+      default:
+        return '';
+    }
+  };
 
   const renderTableHeader = () => {
     switch (disasterType) {
@@ -137,7 +153,34 @@ function DisasterList() {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div style={{ padding: '0', margin: '0' }}>
+     {/* Header Image */}
+       <div style={{ position: 'relative', width: '100%', height: '250px', overflow: 'hidden' }}>
+         <img
+           src={getDisasterImage()}
+           alt={`${disasterType} banner`}
+           style={{
+             width: '100%',
+             height: '100%',
+             objectFit: 'cover',
+
+           }}
+         />
+         <h1 style={{
+           position: 'absolute',
+           top: '50%',
+           left: '50%',
+           transform: 'translate(-50%, -50%)',
+           color: 'white',
+           fontSize: '2.5rem',
+           textShadow: '2px 2px 8px rgba(0,0,0,0.8)',
+           margin: 0,
+         }}>
+           {disasterType.charAt(0).toUpperCase() + disasterType.slice(1)}
+         </h1>
+       </div>
+
+     {/* Title and Buttons */}
       <h2>Disaster Monitoring Dashboard</h2>
       <div style={{ marginBottom: '20px' }}>
         <button onClick={() => setDisasterType('earthquake')}>Earthquakes</button>
@@ -145,6 +188,7 @@ function DisasterList() {
         <button onClick={() => setDisasterType('firestorm')}>Firestorms</button>
       </div>
 
+      {/* Table */}
       <table border="1" cellPadding="10" cellSpacing="0" style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
           {renderTableHeader()}

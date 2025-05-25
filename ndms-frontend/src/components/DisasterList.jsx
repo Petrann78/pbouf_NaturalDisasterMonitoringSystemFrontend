@@ -235,7 +235,7 @@ function DisasterList() {
            textShadow: '2px 2px 8px rgba(0,0,0,0.8)',
            margin: 0,
          }}>
-           {disasterType.charAt(0).toUpperCase() + disasterType.slice(1)}
+           {disasterType.charAt(0).toUpperCase() + disasterType.slice(1) + "s" }
          </h1>
        </div>
 

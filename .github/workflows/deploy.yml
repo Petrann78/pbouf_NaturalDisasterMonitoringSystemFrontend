@@ -24,6 +24,6 @@ jobs:
         with:
           push: true
           tags: pbouf/ndms:web-kubernetes
-          args: |
+          build-args: |
             BUILD_ENVIRONMENT=kubernetes
 

@@ -8,6 +8,7 @@
     "build": "vite build",
     "build:dev": "vite build --mode dev",
     "build:minikube": "vite build --mode minikube",
+    "build:kubernetes": "vite build --mode kubernetes",
     "lint": "eslint .",
     "preview": "vite preview"
   },

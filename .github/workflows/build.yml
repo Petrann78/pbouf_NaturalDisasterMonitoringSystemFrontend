@@ -26,4 +26,12 @@ jobs:
           tags: pbouf/ndms:web-kubernetes
           build-args: |
             BUILD_ENVIRONMENT=kubernetes
+      - name: Invoke workflow in devops repo
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: deploy.yml
+          ref: main
+          repo: Petrann78/pbouf_NaturalDisasterMonitoringSystemDevops
+          # Required when using the `repo` option. Either a PAT or a token generated from the GitHub app or CLI
+          token: "${{ secrets.NDMS_DEVOPS_TOKEN }}"
 

@@ -13,10 +13,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@radix-ui/react-separator": "^1.1.7",
+    "@radix-ui/react-tabs": "^1.1.13",
+    "@radix-ui/themes": "^3.2.1",
+    "@tailwindcss/vite": "^4.1.15",
     "axios": "^1.9.0",
     "env-cmd": "^10.1.0",
+    "radix-ui": "^1.4.3",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "tailwindcss": "^4.1.15"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",

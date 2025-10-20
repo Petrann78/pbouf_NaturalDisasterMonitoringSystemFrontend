@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import earthquakeImage from '../assets/earthquake.jpg';
 import floodImage from '../assets/flood.jpg';
 import firestormImage from '../assets/firestorm.jpg';
+import * as Tabs from '@radix-ui/react-tabs';
+import * as Separator from '@radix-ui/react-separator';
+import { Button } from '@radix-ui/themes';
 
 function DisasterList() {
   const [disasterType, setDisasterType] = useState('earthquake');
@@ -102,55 +105,13 @@ function DisasterList() {
   const renderTableHeader = () => {
     switch (disasterType) {
       case 'earthquake':
-        return (
-          <tr>
-            <th>Timestamp</th>
-            <th>Richter</th>
-            <th>Moment</th>
-            <th>Energy</th>
-            <th>Intensity</th>
-            <th>Lat</th>
-            <th>Lng</th>
-            <th>Depth (km)</th>
-            <th>Damage</th>
-            <th>Soil</th>
-            <th>Roads</th>
-            <th>Bridges</th>
-            <th>Buildings</th>
-          </tr>
-        );
+        return ['Timestamp', 'Richter', 'Moment', 'Energy', 'Intensity', 'Lat', 'Lng', 'Depth (km)', 'Damage', 'Soil', 'Roads', 'Bridges', 'Buildings'];
       case 'flood':
-        return (
-          <tr>
-            <th>Timestamp</th>
-            <th>Soil Moisture (%)</th>
-            <th>Water Level (m)</th>
-            <th>Rainfall (mm)</th>
-            <th>Severity</th>
-            <th>Velocity</th>
-            <th>Flood Type</th>
-            <th>Lat</th>
-            <th>Lng</th>
-          </tr>
-        );
+        return ['Timestamp', 'Soil Moisture (%)', 'Water Level (m)', 'Rainfall (mm)', 'Severity', 'Velocity', 'Flood Type', 'Lat', 'Lng'];
       case 'firestorm':
-        return (
-          <tr>
-            <th>Detected At</th>
-            <th>Wind Speed (kph)</th>
-            <th>Wind Dir (°)</th>
-            <th>Temperature (°C)</th>
-            <th>Spread Rate (kph)</th>
-            <th>Altitude</th>
-            <th>Size (km²)</th>
-            <th>Intensity</th>
-            <th>Description</th>
-            <th>Lat</th>
-            <th>Lng</th>
-          </tr>
-        );
+        return ['Detected At', 'Wind Speed (kph)', 'Wind Dir (°)', 'Temperature (°C)', 'Spread Rate (kph)', 'Altitude', 'Size (km²)', 'Intensity', 'Description', 'Lat', 'Lng'];
       default:
-        return null;
+        return [];
     }
   };
 
@@ -159,7 +120,7 @@ function DisasterList() {
       switch (disasterType) {
         case 'earthquake':
           return (
-            <tr key={idx}>
+            <tr key={idx} className="hover:bg-gray-100 transition">
               <td>{new Date(item.timestamp).toLocaleString()}</td>
               <td>{item.richter_magnitude}</td>
               <td>{item.moment_magnitude}</td>
@@ -177,7 +138,7 @@ function DisasterList() {
           );
         case 'flood':
           return (
-            <tr key={idx}>
+            <tr key={idx} className="hover:bg-gray-100 transition">
               <td>{new Date(item.timestamp).toLocaleString()}</td>
               <td>{item.soil_moisture_percent}</td>
               <td>{item.water_level_m}</td>
@@ -191,7 +152,7 @@ function DisasterList() {
           );
         case 'firestorm':
           return (
-            <tr key={idx}>
+            <tr key={idx} className="hover:bg-gray-100 transition">
               <td>{new Date(item.detected_at).toLocaleString()}</td>
               <td>{item.wind_speed_kph}</td>
               <td>{item.wind_direction_deg}</td>
@@ -201,8 +162,8 @@ function DisasterList() {
               <td>{item.size_in_square_km}</td>
               <td>{item.intensity}</td>
               <td>{item.description}</td>
-             <td>{item.location?.latitude ?? 'N/A'}</td>
-             <td>{item.location?.longitude ?? 'N/A'}</td>
+              <td>{item.location?.latitude ?? 'N/A'}</td>
+              <td>{item.location?.longitude ?? 'N/A'}</td>
             </tr>
           );
         default:
@@ -212,66 +173,83 @@ function DisasterList() {
   };
 
   return (
-    <div style={{ padding: '0', margin: '0' }}>
-     {/* Header Image */}
-       <div style={{ position: 'relative', width: '100%', height: '250px', overflow: 'hidden' }}>
-         <img
-           src={getDisasterImage()}
-           alt={`${disasterType} banner`}
-           style={{
-             width: '100%',
-             height: '100%',
-             objectFit: 'cover',
-
-           }}
-         />
-         <h1 style={{
-           position: 'absolute',
-           top: '50%',
-           left: '50%',
-           transform: 'translate(-50%, -50%)',
-           color: 'white',
-           fontSize: '2.5rem',
-           textShadow: '2px 2px 8px rgba(0,0,0,0.8)',
-           margin: 0,
-         }}>
-           {disasterType.charAt(0).toUpperCase() + disasterType.slice(1) + "s" }
-         </h1>
-       </div>
-
-     {/* Title and Buttons */}
-      <h2>Disaster Monitoring Dashboard</h2>
-      <div style={{ marginBottom: '20px' }}>
-        <button onClick={() => setDisasterType('earthquake')}>Earthquakes</button>
-        <button onClick={() => setDisasterType('flood')}>Floods</button>
-        <button onClick={() => setDisasterType('firestorm')}>Firestorms</button>
+    <div className="w-full">
+      {/* Banner */}
+      <div className="relative w-full h-[250px] overflow-hidden">
+        <img src={getDisasterImage()} alt={`${disasterType} banner`} className="w-full h-full object-cover" />
+        <h1 className="absolute top-1/2 left-1/2 text-white text-4xl font-bold drop-shadow-xl -translate-x-1/2 -translate-y-1/2">
+          {disasterType.charAt(0).toUpperCase() + disasterType.slice(1)}s
+        </h1>
       </div>
 
-        <div style={{ marginBottom: '20px' }}>
+      {/* Content */}
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <h2 className="text-2xl font-semibold mb-4 text-gray-800">Disaster Monitoring Dashboard</h2>
+
+        {/* Tabs */}
+        <Tabs.Root value={disasterType} onValueChange={setDisasterType}>
+          <Tabs.List className="flex gap-3 border-b border-gray-200 mb-6">
+            {['earthquake', 'flood', 'firestorm'].map((type) => (
+              <Tabs.Trigger
+                key={type}
+                value={type}
+                className={`px-4 py-2 rounded-t-md text-sm font-medium transition ${disasterType === type
+                  ? 'bg-blue-600'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+              >
+                {type.charAt(0).toUpperCase() + type.slice(1)}s
+              </Tabs.Trigger>
+            ))}
+          </Tabs.List>
+        </Tabs.Root>
+
+        {/* Filters */}
+        <div className="flex flex-wrap gap-3 mb-4">
           {Object.entries(filters[disasterType]).map(([key, value]) => (
             <input
               key={key}
               type="text"
               name={key}
-              placeholder={key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
+              placeholder={key.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())}
               value={value}
               onChange={handleFilterChange}
-              style={{ marginRight: '8px', marginBottom: '8px' }}
+              className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
             />
           ))}
-          <button onClick={fetchData}>Apply Filters</button>
+          <button
+            onClick={fetchData}
+            className="px-4 py-2 bg-blue-600 text-sm rounded-md hover:bg-blue-700 transition"
+          >
+            Apply Filters
+          </button>
         </div>
 
+        <Separator.Root className="my-6 h-[1px] bg-gray-300" />
 
-      {/* Table */}
-      <table border="1" cellPadding="10" cellSpacing="0" style={{ width: '100%', borderCollapse: 'collapse' }}>
-        <thead>
-          {renderTableHeader()}
-        </thead>
-        <tbody>
-          {renderTableRows()}
-        </tbody>
-      </table>
+        {/* Table */}
+        {
+          data.length <= 0 ? (
+            <div>No data found</div>
+          ) : (
+            <div className="overflow-x-auto border border-gray-200 rounded-lg shadow-sm">
+              <table className="min-w-full text-sm text-left border-collapse">
+                <thead className="bg-gray-100">
+                  <tr>
+                    {renderTableHeader().map((head, i) => (
+                      <th key={i} className="px-4 py-2 font-semibold text-gray-700 border-b">
+                        {head}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">{renderTableRows()}</tbody>
+              </table>
+            </div>
+          )
+        }
+
+      </div>
     </div>
   );
 }

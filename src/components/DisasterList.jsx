@@ -120,7 +120,7 @@ function DisasterList() {
       switch (disasterType) {
         case 'earthquake':
           return (
-            <tr key={idx} className="hover:bg-gray-100 transition">
+            <tr key={idx} className="hover:bg-slate-50 transition">
               <td>{new Date(item.timestamp).toLocaleString()}</td>
               <td>{item.richter_magnitude}</td>
               <td>{item.moment_magnitude}</td>
@@ -138,7 +138,7 @@ function DisasterList() {
           );
         case 'flood':
           return (
-            <tr key={idx} className="hover:bg-gray-100 transition">
+            <tr key={idx} className="hover:bg-slate-50 transition">
               <td>{new Date(item.timestamp).toLocaleString()}</td>
               <td>{item.soil_moisture_percent}</td>
               <td>{item.water_level_m}</td>
@@ -152,7 +152,7 @@ function DisasterList() {
           );
         case 'firestorm':
           return (
-            <tr key={idx} className="hover:bg-gray-100 transition">
+            <tr key={idx} className="hover:bg-slate-50 transition">
               <td>{new Date(item.detected_at).toLocaleString()}</td>
               <td>{item.wind_speed_kph}</td>
               <td>{item.wind_direction_deg}</td>
@@ -175,27 +175,48 @@ function DisasterList() {
   return (
     <div className="w-full">
       {/* Banner */}
-      <div className="relative w-full h-[250px] overflow-hidden">
-        <img src={getDisasterImage()} alt={`${disasterType} banner`} className="w-full h-full object-cover" />
-        <h1 className="absolute top-1/2 left-1/2 text-white text-4xl font-bold drop-shadow-xl -translate-x-1/2 -translate-y-1/2">
-          {disasterType.charAt(0).toUpperCase() + disasterType.slice(1)}s
-        </h1>
+      <div className="relative w-full h-[260px] overflow-hidden rounded-2xl">
+  <img
+    src={getDisasterImage()}
+    alt={`${disasterType} banner`}
+    className="absolute inset-0 w-full h-full object-cover"
+  />
+  <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/35 to-black/10" />
+
+  <div className="relative h-full flex items-center justify-center text-center">
+    <div className="p-6 md:p-8 max-w-2xl">
+      <div className="mx-auto inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 text-white/90 text-xs backdrop-blur">
+        Disaster Monitoring
       </div>
+      <h1 className="mt-2 text-white text-4xl md:text-5xl font-semibold tracking-tight drop-shadow">
+        {disasterType.charAt(0).toUpperCase() + disasterType.slice(1)}s
+      </h1>
+      <p className="mt-2 text-white/80 text-sm max-w-xl">
+        Filter events and monitor key indicators in near real time.
+      </p>
+    </div>
+  </div>
+</div>
+
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-6 py-8">
-        <h2 className="text-2xl font-semibold mb-4 text-gray-800">Disaster Monitoring Dashboard</h2>
+        <div className="flex flex-col items-center text-center mb-8">
+        <h2 className="text-3xl font-bold tracking-tight text-white drop-shadow mb-6">
+          Disaster Monitoring Dashboard
+        </h2>
 
         {/* Tabs */}
         <Tabs.Root value={disasterType} onValueChange={setDisasterType}>
-          <Tabs.List className="flex gap-3 border-b border-gray-200 mb-6">
+          <Tabs.List className="mt-6 flex gap-3 justify-center">
             {['earthquake', 'flood', 'firestorm'].map((type) => (
               <Tabs.Trigger
                 key={type}
                 value={type}
-                className={`px-4 py-2 rounded-t-md text-sm font-medium transition ${disasterType === type
-                  ? 'bg-blue-600'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                className={`px-4 py-2 rounded-t-md text-sm font-medium transition ${
+                  disasterType === type
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
               >
                 {type.charAt(0).toUpperCase() + type.slice(1)}s
@@ -203,27 +224,32 @@ function DisasterList() {
             ))}
           </Tabs.List>
         </Tabs.Root>
+      </div>
+       {/* Filters */}
+<div className="rounded-xl bg-slate-50 ring-1 ring-slate-200 p-4 md:p-5 mb-6">
+  <div className="flex flex-wrap gap-3">
+    {Object.entries(filters[disasterType]).map(([key, value]) => (
+      <input
+        key={key}
+        type="text"
+        name={key}
+        placeholder={key.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())}
+        value={value}
+        onChange={handleFilterChange}
+        className="h-10 w-[220px] border border-slate-200 bg-white rounded-md px-3 text-sm
+                   focus:ring-2 focus:ring-blue-500 outline-none"
+      />
+    ))}
 
-        {/* Filters */}
-        <div className="flex flex-wrap gap-3 mb-4">
-          {Object.entries(filters[disasterType]).map(([key, value]) => (
-            <input
-              key={key}
-              type="text"
-              name={key}
-              placeholder={key.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())}
-              value={value}
-              onChange={handleFilterChange}
-              className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
-            />
-          ))}
-          <button
-            onClick={fetchData}
-            className="px-4 py-2 bg-blue-600 text-sm rounded-md hover:bg-blue-700 transition"
-          >
-            Apply Filters
-          </button>
-        </div>
+    <button
+      onClick={fetchData}
+      className="h-10 px-4 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition shadow-sm"
+    >
+      Apply Filters
+    </button>
+  </div>
+</div>
+
 
         <Separator.Root className="my-6 h-[1px] bg-gray-300" />
 
@@ -232,18 +258,18 @@ function DisasterList() {
           data.length <= 0 ? (
             <div>No data found</div>
           ) : (
-            <div className="overflow-x-auto border border-gray-200 rounded-lg shadow-sm">
+            <div className="overflow-x-auto rounded-xl ring-1 ring-slate-200 bg-white">
               <table className="min-w-full text-sm text-left border-collapse">
-                <thead className="bg-gray-100">
+                <thead className="bg-slate-50 sticky top-0 z-10">
                   <tr>
                     {renderTableHeader().map((head, i) => (
-                      <th key={i} className="px-4 py-2 font-semibold text-gray-700 border-b">
+                      <th key={i} className="px-4 py-3 font-semibold text-slate-700 border-b border-slate-200">
                         {head}
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">{renderTableRows()}</tbody>
+                <tbody className="divide-y divide-slate-100">{renderTableRows()}</tbody>
               </table>
             </div>
           )

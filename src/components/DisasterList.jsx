@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import earthquakeImage from '../assets/earthquake.jpg';
 import floodImage from '../assets/flood.jpg';
 import firestormImage from '../assets/firestorm.jpg';
+import * as Tabs from '@radix-ui/react-tabs';
+import * as Separator from '@radix-ui/react-separator';
+import { Button } from '@radix-ui/themes';
 
 function DisasterList() {
   const [disasterType, setDisasterType] = useState('earthquake');
@@ -102,55 +105,13 @@ function DisasterList() {
   const renderTableHeader = () => {
     switch (disasterType) {
       case 'earthquake':
-        return (
-          <tr>
-            <th>Timestamp</th>
-            <th>Richter</th>
-            <th>Moment</th>
-            <th>Energy</th>
-            <th>Intensity</th>
-            <th>Lat</th>
-            <th>Lng</th>
-            <th>Depth (km)</th>
-            <th>Damage</th>
-            <th>Soil</th>
-            <th>Roads</th>
-            <th>Bridges</th>
-            <th>Buildings</th>
-          </tr>
-        );
+        return ['Timestamp', 'Richter', 'Moment', 'Energy', 'Intensity', 'Lat', 'Lng', 'Depth (km)', 'Damage', 'Soil', 'Roads', 'Bridges', 'Buildings'];
       case 'flood':
-        return (
-          <tr>
-            <th>Timestamp</th>
-            <th>Soil Moisture (%)</th>
-            <th>Water Level (m)</th>
-            <th>Rainfall (mm)</th>
-            <th>Severity</th>
-            <th>Velocity</th>
-            <th>Flood Type</th>
-            <th>Lat</th>
-            <th>Lng</th>
-          </tr>
-        );
+        return ['Timestamp', 'Soil Moisture (%)', 'Water Level (m)', 'Rainfall (mm)', 'Severity', 'Velocity', 'Flood Type', 'Lat', 'Lng'];
       case 'firestorm':
-        return (
-          <tr>
-            <th>Detected At</th>
-            <th>Wind Speed (kph)</th>
-            <th>Wind Dir (°)</th>
-            <th>Temperature (°C)</th>
-            <th>Spread Rate (kph)</th>
-            <th>Altitude</th>
-            <th>Size (km²)</th>
-            <th>Intensity</th>
-            <th>Description</th>
-            <th>Lat</th>
-            <th>Lng</th>
-          </tr>
-        );
+        return ['Detected At', 'Wind Speed (kph)', 'Wind Dir (°)', 'Temperature (°C)', 'Spread Rate (kph)', 'Altitude', 'Size (km²)', 'Intensity', 'Description', 'Lat', 'Lng'];
       default:
-        return null;
+        return [];
     }
   };
 
@@ -159,7 +120,7 @@ function DisasterList() {
       switch (disasterType) {
         case 'earthquake':
           return (
-            <tr key={idx}>
+            <tr key={idx} className="hover:bg-slate-50 transition">
               <td>{new Date(item.timestamp).toLocaleString()}</td>
               <td>{item.richter_magnitude}</td>
               <td>{item.moment_magnitude}</td>
@@ -177,7 +138,7 @@ function DisasterList() {
           );
         case 'flood':
           return (
-            <tr key={idx}>
+            <tr key={idx} className="hover:bg-slate-50 transition">
               <td>{new Date(item.timestamp).toLocaleString()}</td>
               <td>{item.soil_moisture_percent}</td>
               <td>{item.water_level_m}</td>
@@ -191,7 +152,7 @@ function DisasterList() {
           );
         case 'firestorm':
           return (
-            <tr key={idx}>
+            <tr key={idx} className="hover:bg-slate-50 transition">
               <td>{new Date(item.detected_at).toLocaleString()}</td>
               <td>{item.wind_speed_kph}</td>
               <td>{item.wind_direction_deg}</td>
@@ -201,8 +162,8 @@ function DisasterList() {
               <td>{item.size_in_square_km}</td>
               <td>{item.intensity}</td>
               <td>{item.description}</td>
-             <td>{item.location?.latitude ?? 'N/A'}</td>
-             <td>{item.location?.longitude ?? 'N/A'}</td>
+              <td>{item.location?.latitude ?? 'N/A'}</td>
+              <td>{item.location?.longitude ?? 'N/A'}</td>
             </tr>
           );
         default:
@@ -212,66 +173,109 @@ function DisasterList() {
   };
 
   return (
-    <div style={{ padding: '0', margin: '0' }}>
-     {/* Header Image */}
-       <div style={{ position: 'relative', width: '100%', height: '250px', overflow: 'hidden' }}>
-         <img
-           src={getDisasterImage()}
-           alt={`${disasterType} banner`}
-           style={{
-             width: '100%',
-             height: '100%',
-             objectFit: 'cover',
+    <div className="w-full">
+      {/* Banner */}
+      <div className="relative w-full h-[260px] overflow-hidden rounded-2xl">
+  <img
+    src={getDisasterImage()}
+    alt={`${disasterType} banner`}
+    className="absolute inset-0 w-full h-full object-cover"
+  />
+  <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/35 to-black/10" />
 
-           }}
-         />
-         <h1 style={{
-           position: 'absolute',
-           top: '50%',
-           left: '50%',
-           transform: 'translate(-50%, -50%)',
-           color: 'white',
-           fontSize: '2.5rem',
-           textShadow: '2px 2px 8px rgba(0,0,0,0.8)',
-           margin: 0,
-         }}>
-           {disasterType.charAt(0).toUpperCase() + disasterType.slice(1) + "s" }
-         </h1>
-       </div>
-
-     {/* Title and Buttons */}
-      <h2>Disaster Monitoring Dashboard</h2>
-      <div style={{ marginBottom: '20px' }}>
-        <button onClick={() => setDisasterType('earthquake')}>Earthquakes</button>
-        <button onClick={() => setDisasterType('flood')}>Floods</button>
-        <button onClick={() => setDisasterType('firestorm')}>Firestorms</button>
+  <div className="relative h-full flex items-center justify-center text-center">
+    <div className="p-6 md:p-8 max-w-2xl">
+      <div className="mx-auto inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 text-white/90 text-xs backdrop-blur">
+        Disaster Monitoring
       </div>
-
-        <div style={{ marginBottom: '20px' }}>
-          {Object.entries(filters[disasterType]).map(([key, value]) => (
-            <input
-              key={key}
-              type="text"
-              name={key}
-              placeholder={key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
-              value={value}
-              onChange={handleFilterChange}
-              style={{ marginRight: '8px', marginBottom: '8px' }}
-            />
-          ))}
-          <button onClick={fetchData}>Apply Filters</button>
-        </div>
+      <h1 className="mt-2 text-white text-4xl md:text-5xl font-semibold tracking-tight drop-shadow">
+        {disasterType.charAt(0).toUpperCase() + disasterType.slice(1)}s
+      </h1>
+      <p className="mt-2 text-white/80 text-sm max-w-xl">
+        Filter events and monitor key indicators in near real time.
+      </p>
+    </div>
+  </div>
+</div>
 
 
-      {/* Table */}
-      <table border="1" cellPadding="10" cellSpacing="0" style={{ width: '100%', borderCollapse: 'collapse' }}>
-        <thead>
-          {renderTableHeader()}
-        </thead>
-        <tbody>
-          {renderTableRows()}
-        </tbody>
-      </table>
+      {/* Content */}
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="flex flex-col items-center text-center mb-8">
+        <h2 className="text-3xl font-bold tracking-tight text-white drop-shadow mb-6">
+          Disaster Monitoring Dashboard
+        </h2>
+
+        {/* Tabs */}
+        <Tabs.Root value={disasterType} onValueChange={setDisasterType}>
+          <Tabs.List className="mt-6 flex gap-3 justify-center">
+            {['earthquake', 'flood', 'firestorm'].map((type) => (
+              <Tabs.Trigger
+                key={type}
+                value={type}
+                className={`px-4 py-2 rounded-t-md text-sm font-medium transition ${
+                  disasterType === type
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+              >
+                {type.charAt(0).toUpperCase() + type.slice(1)}s
+              </Tabs.Trigger>
+            ))}
+          </Tabs.List>
+        </Tabs.Root>
+      </div>
+       {/* Filters */}
+<div className="rounded-xl bg-slate-50 ring-1 ring-slate-200 p-4 md:p-5 mb-6">
+  <div className="flex flex-wrap gap-3">
+    {Object.entries(filters[disasterType]).map(([key, value]) => (
+      <input
+        key={key}
+        type="text"
+        name={key}
+        placeholder={key.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())}
+        value={value}
+        onChange={handleFilterChange}
+        className="h-10 w-[220px] border border-slate-200 bg-white rounded-md px-3 text-sm
+                   focus:ring-2 focus:ring-blue-500 outline-none"
+      />
+    ))}
+
+    <button
+      onClick={fetchData}
+      className="h-10 px-4 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition shadow-sm"
+    >
+      Apply Filters
+    </button>
+  </div>
+</div>
+
+
+        <Separator.Root className="my-6 h-[1px] bg-gray-300" />
+
+        {/* Table */}
+        {
+          data.length <= 0 ? (
+            <div>No data found</div>
+          ) : (
+            <div className="overflow-x-auto rounded-xl ring-1 ring-slate-200 bg-white">
+              <table className="min-w-full text-sm text-left border-collapse">
+                <thead className="bg-slate-50 sticky top-0 z-10">
+                  <tr>
+                    {renderTableHeader().map((head, i) => (
+                      <th key={i} className="px-4 py-3 font-semibold text-slate-700 border-b border-slate-200">
+                        {head}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">{renderTableRows()}</tbody>
+              </table>
+            </div>
+          )
+        }
+
+      </div>
     </div>
   );
 }
